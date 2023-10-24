@@ -24,7 +24,7 @@ describe('TodoController', () => {
           provide: TodoService,
           useValue: {
             findAll: jest.fn().mockResolvedValue(todoEntityList),
-            findOneOrFail: jest.fn(),
+            findOneOrFail: jest.fn().mockResolvedValue(todoEntityList[0]),
             create: jest.fn().mockResolvedValue(newTodoEntity),
             update: jest.fn(),
             deleteById: jest.fn(),
@@ -103,6 +103,21 @@ describe('TodoController', () => {
     });
   });
 
+  describe('show', () => {
+    it('should return a todo entity successfully', async () => {
+      // arrange
+      const expectedTodo = todoEntityList[0];
+      jest.spyOn(todoService, 'findOneOrFail').mockResolvedValue(expectedTodo);
+
+      // act
+      const result = await todoController.show('1');
+
+      // assert
+      expect(result).toEqual(expectedTodo);
+      expect(todoService.findOneOrFail).toHaveBeenCalledWith('1');
+      expect(todoService.findOneOrFail).toHaveBeenCalledTimes(1);
+    });
+  });
 });
 
 // Arrange: Preparar os dados
