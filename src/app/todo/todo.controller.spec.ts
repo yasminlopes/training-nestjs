@@ -85,6 +85,24 @@ describe('TodoController', () => {
       expect(todoService.create).toHaveBeenCalledWith(body);
       expect(todoService.create).toHaveBeenCalledTimes(1);
     });
+
+    it('should throw an exception when the service fails', async () => {
+      // arrange
+      const body: CreateTodoDto = {
+        task: 'new-task',
+        isDone: 0,
+      };
+
+      jest.spyOn(todoService, 'create').mockRejectedValue(new Error());
+
+      // act
+      const result = todoController.create(body);
+
+      // assert
+      await expect(result).rejects.toThrowError();
+    });
+  });
+
 });
 
 // Arrange: Preparar os dados
