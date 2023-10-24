@@ -2,13 +2,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TodoController } from './todo.controller';
 import { TodoService } from './todo.service';
 import { TodoEntity } from './entity/todo.entity';
-import { todo } from 'node:test';
+import { CreateTodoDto } from './dto/create-todo.dto';
 
 const todoEntityList: TodoEntity[] = [
   new TodoEntity({ id: '1', task: 'task-1', isDone: 0 }),
   new TodoEntity({ id: '2', task: 'task-2', isDone: 0 }),
   new TodoEntity({ id: '3', task: 'task-3', isDone: 0 }),
 ];
+
+const newTodoEntity = new TodoEntity({ task: 'new-task', isDone: 0 });
 
 describe('TodoController', () => {
   let todoController: TodoController;
@@ -23,7 +25,7 @@ describe('TodoController', () => {
           useValue: {
             findAll: jest.fn().mockResolvedValue(todoEntityList),
             findOneOrFail: jest.fn(),
-            create: jest.fn(),
+            create: jest.fn().mockResolvedValue(newTodoEntity),
             update: jest.fn(),
             deleteById: jest.fn(),
           },
@@ -64,6 +66,25 @@ describe('TodoController', () => {
       expect(todoService.findAll).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('create', () => {
+    it('should create a todo entity successfully', async () => {
+      // arrange
+      const body: CreateTodoDto = {
+        task: 'new-task',
+        isDone: 0,
+      };
+
+      jest.spyOn(todoService, 'create').mockResolvedValue(newTodoEntity);
+
+      // act
+      const result = await todoController.create(body);
+
+      // assert
+      expect(result).toEqual(newTodoEntity);
+      expect(todoService.create).toHaveBeenCalledWith(body);
+      expect(todoService.create).toHaveBeenCalledTimes(1);
+    });
 });
 
 // Arrange: Preparar os dados
