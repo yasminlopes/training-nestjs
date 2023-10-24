@@ -117,6 +117,17 @@ describe('TodoController', () => {
       expect(todoService.findOneOrFail).toHaveBeenCalledWith('1');
       expect(todoService.findOneOrFail).toHaveBeenCalledTimes(1);
     });
+
+    it('should throw an exception when the service fails', async () => {
+      // arrange
+      jest.spyOn(todoService, 'findOneOrFail').mockRejectedValue(new Error());
+
+      // act
+      const result = todoController.show('1');
+
+      // assert
+      await expect(result).rejects.toThrowError();
+    });
   });
 });
 
