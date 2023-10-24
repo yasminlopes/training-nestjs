@@ -1,5 +1,18 @@
-import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('api/v1/users')
 export class UsersController {
@@ -7,26 +20,30 @@ export class UsersController {
 
   @Get()
   public async index() {
-    return null;
+    return this.usersService.findAll();
   }
 
   @Get(':id')
-  public async show() {
-    return null;
+  public async show(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.usersService.findOneOrFail({ where: { id } });
   }
 
   @Post()
-  public async store() {
-    return null;
+  public async store(@Body() body: CreateUserDto) {
+    return this.usersService.store(body);
   }
 
   @Put(':id')
-  public async update() {
-    return null;
+  public async update(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() body: UpdateUserDto,
+  ) {
+    return await this.usersService.update(id, body);
   }
 
   @Delete(':id')
-  public async destroy() {
-    return null;
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async destroy(@Param('id', new ParseUUIDPipe()) id: string) {
+    await this.usersService.destroy(id);
   }
 }
