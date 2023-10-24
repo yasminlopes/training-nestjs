@@ -3,6 +3,7 @@ import { TodoController } from './todo.controller';
 import { TodoService } from './todo.service';
 import { TodoEntity } from './entity/todo.entity';
 import { CreateTodoDto } from './dto/create-todo.dto';
+import { UpdateTodoDto } from './dto/update-todo.dto';
 
 const todoEntityList: TodoEntity[] = [
   new TodoEntity({ id: '1', task: 'task-1', isDone: 0 }),
@@ -11,6 +12,8 @@ const todoEntityList: TodoEntity[] = [
 ];
 
 const newTodoEntity = new TodoEntity({ task: 'new-task', isDone: 0 });
+
+const updatedTodoEntity = new TodoEntity({ task: 'task-1', isDone: 1 });
 
 describe('TodoController', () => {
   let todoController: TodoController;
@@ -26,7 +29,7 @@ describe('TodoController', () => {
             findAll: jest.fn().mockResolvedValue(todoEntityList),
             findOneOrFail: jest.fn().mockResolvedValue(todoEntityList[0]),
             create: jest.fn().mockResolvedValue(newTodoEntity),
-            update: jest.fn(),
+            update: jest.fn().mockResolvedValue(updatedTodoEntity),
             deleteById: jest.fn(),
           },
         },
@@ -127,6 +130,22 @@ describe('TodoController', () => {
 
       // assert
       await expect(result).rejects.toThrowError();
+    });
+  });
+
+  describe('update', () => {
+    it('should update a todo entity successfully', async () => {
+      // arrange
+      const body: UpdateTodoDto = {
+        task: 'task-1',
+        isDone: 1,
+      };
+
+      // act
+      const result = await todoController.update('1', body);
+
+      // assert
+      expect(result).toEqual(updatedTodoEntity);
     });
   });
 });
