@@ -51,6 +51,18 @@ describe('TodoController', () => {
       expect(result[0].id).toEqual(todoEntityList[0].id);
       expect(todoService.findAll).toHaveBeenCalledTimes(1);
     });
+
+    it('should throw an exception when the service fails', async () => {
+      // arrange
+      jest.spyOn(todoService, 'findAll').mockRejectedValue(new Error());
+
+      // act
+      const result = todoController.index();
+
+      // assert
+      await expect(result).rejects.toThrowError();
+      expect(todoService.findAll).toHaveBeenCalledTimes(1);
+    });
   });
 });
 
