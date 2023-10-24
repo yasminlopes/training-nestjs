@@ -10,6 +10,15 @@ import {
 
 @Entity({ name: 'todos' })
 export class TodoEntity {
+  constructor(todo?: Partial<TodoEntity>) {
+    this.id = todo?.id;
+    this.task = todo?.task;
+    this.isDone = todo?.isDone;
+    this.createdAt = todo?.createdAt;
+    this.updatedAt = todo?.updatedAt;
+    this.deletedAt = todo?.deletedAt;
+  }
+
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty()
   id: string;
