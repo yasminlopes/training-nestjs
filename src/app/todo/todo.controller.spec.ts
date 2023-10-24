@@ -30,7 +30,7 @@ describe('TodoController', () => {
             findOneOrFail: jest.fn().mockResolvedValue(todoEntityList[0]),
             create: jest.fn().mockResolvedValue(newTodoEntity),
             update: jest.fn().mockResolvedValue(updatedTodoEntity),
-            deleteById: jest.fn(),
+            deleteById: jest.fn().mockResolvedValue(undefined),
           },
         },
       ],
