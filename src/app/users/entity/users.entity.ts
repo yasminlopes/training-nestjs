@@ -1,4 +1,6 @@
+import { hashSync } from 'bcrypt';
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -32,4 +34,9 @@ export class UsersEntity {
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
+
+  @BeforeInsert()
+  public hashPassword() {
+    this.password = hashSync(this.password, 12);
+  }
 }
