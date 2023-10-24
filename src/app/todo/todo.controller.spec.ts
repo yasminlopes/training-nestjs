@@ -164,6 +164,27 @@ describe('TodoController', () => {
       await expect(result).rejects.toThrowError();
     });
   });
+
+  describe('delete', () => {
+    it('should delete a todo entity successfully', async () => {
+      // act
+      const result = await todoController.destroy('1');
+
+      // assert
+      expect(result).toBeUndefined();
+    });
+
+    it('should throw an exception when the service fails', async () => {
+      // arrange
+      jest.spyOn(todoService, 'deleteById').mockRejectedValue(new Error());
+
+      // act
+      const result = todoController.destroy('1');
+
+      // assert
+      await expect(result).rejects.toThrowError();
+    });
+  });
 });
 
 // Arrange: Preparar os dados
