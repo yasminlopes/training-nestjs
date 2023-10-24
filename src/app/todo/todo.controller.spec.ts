@@ -1,18 +1,31 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TodoController } from './todo.controller';
+import { TodoService } from './todo.service';
 
 describe('TodoController', () => {
-  let controller: TodoController;
+  let todoController: TodoController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TodoController],
+      providers: [
+        {
+          provide: TodoService,
+          useValue: {
+            findAll: jest.fn(),
+            findOneOrFail: jest.fn(),
+            create: jest.fn(),
+            update: jest.fn(),
+            deleteById: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
-    controller = module.get<TodoController>(TodoController);
+    todoController = module.get<TodoController>(TodoController);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(todoController).toBeDefined();
   });
 });
