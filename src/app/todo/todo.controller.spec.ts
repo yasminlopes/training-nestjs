@@ -147,6 +147,22 @@ describe('TodoController', () => {
       // assert
       expect(result).toEqual(updatedTodoEntity);
     });
+
+    it('should throw an exception when the service fails', async () => {
+      // arrange
+      const body: UpdateTodoDto = {
+        task: 'task-1',
+        isDone: 1,
+      };
+
+      jest.spyOn(todoService, 'update').mockRejectedValue(new Error());
+
+      // act
+      const result = todoController.update('1', body);
+
+      // assert
+      await expect(result).rejects.toThrowError();
+    });
   });
 });
 
