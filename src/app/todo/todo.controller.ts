@@ -11,6 +11,8 @@ import {
   Put,
 } from '@nestjs/common';
 import { TodoService } from './todo.service';
+import { CreateTodoDto } from './dto/create-todo.dto';
+import { UpdateTodoDto } from './dto/update-todo.dto';
 
 @Controller('api/v1/todos')
 export class TodoController {
@@ -27,14 +29,14 @@ export class TodoController {
   }
 
   @Post()
-  public async create(@Body() body) {
+  public async create(@Body() body: CreateTodoDto) {
     return await this.todoService.create(body);
   }
 
   @Put(':id')
   public async update(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() body,
+    @Body() body: UpdateTodoDto,
   ) {
     return await this.todoService.update(id, body);
   }
